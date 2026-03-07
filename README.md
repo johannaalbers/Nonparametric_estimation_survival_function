@@ -1,40 +1,193 @@
-# Survival Analysis of Clinical Trial Data (Kaplan–Meier Estimation)
+# Nonparametric Survival Analysis in R  
+### Kaplan–Meier Estimation of Time to Leukemia Relapse
 
-This repository contains an end-to-end analysis of clinical time-to-event data using **nonparametric survival analysis methods in R**.  
-The project demonstrates how to estimate survival functions, handle right-censored observations, and compare treatment effects in a clinical trial setting.
+This repository contains an R-based analysis of **time-to-event clinical trial data** using **nonparametric survival analysis methods**.
 
-The analysis uses a leukemia clinical trial dataset and focuses on **time to relapse under different treatments**.
+The project demonstrates how to analyze **right-censored medical data**, estimate survival probabilities using the **Kaplan–Meier estimator**, and compare treatment groups in a leukemia clinical trial dataset.
+
+The analysis was conducted as part of the **Advanced Health Data Analysis – Survival Analysis course (2025/26)**.
 
 ---
 
-# Project Objectives
+# Project Overview
 
-The goal of this project is to demonstrate key techniques used in **health data science and clinical research**, including:
+The objective of this project is to demonstrate core techniques used in **biostatistics and health data science**, including:
 
-- Survival analysis of time-to-event outcomes
-- Handling **right-censored clinical data**
-- Estimating survival probabilities using the **Kaplan–Meier estimator**
-- Comparing treatment groups using survival curves
-- Visualizing survival functions, cumulative hazard functions, and event distributions
-- Interpreting clinical outcomes from statistical models
+- exploratory analysis of clinical time-to-event data  
+- handling **right-censored observations**  
+- estimation of survival functions  
+- comparison of treatment groups  
+- visualization of survival curves and hazard functions  
 
-This project illustrates common workflows used in **biostatistics, epidemiology, and real-world health data analysis**.
+The analysis evaluates whether a **6-MP treatment improves time until leukemia relapse compared to a control group**.
 
 ---
 
 # Dataset
 
-The dataset originates from a clinical trial investigating **leukemia relapse under two treatment arms**.
+The dataset represents a **clinical trial on leukemia relapse**.
 
-Variables include:
+Variables:
 
 | Variable | Description |
 |--------|-------------|
-| `pair` | Patient pair ID |
+| `pair` | Patient pair identifier |
 | `time` | Time until relapse (weeks) |
 | `cens` | Relapse indicator (event vs censored) |
-| `treat` | Treatment group (Control vs 6-MP) |
+| `treat` | Treatment group (Control or 6-MP) |
 | `status` | Disease stage |
+
+Key characteristics:
+
+- **42 observations**
+- **Right-censored survival data**
+- Two treatment groups (Control vs 6-MP)
+
+---
+
+# Methods
+
+## Survival Object
+
+The analysis uses the `Surv()` object from the **survival** package to encode time-to-event data and censoring information.
+
+```r
+library(survival)
+
+srem <- with(remission, Surv(time, cens))
+```
+
+Right-censored observations are automatically handled within this structure.
+
+---
+
+## Kaplan–Meier Estimation
+
+The survival function \(S(t)\) is estimated using the **Kaplan–Meier estimator**:
+
+```r
+svf <- survfit(srem ~ 1)
+summary(svf)
+```
+
+Outputs include:
+
+- survival probability estimates
+- number of individuals at risk
+- number of events
+- confidence intervals
+- median survival time
+
+---
+
+## Treatment Comparison
+
+Survival curves are estimated separately for each treatment group:
+
+```r
+svf2t <- survfit(srem ~ treat, data = remission)
+summary(svf2t)
+```
+
+This allows comparison of relapse times between:
+
+- Control group
+- 6-MP treatment group
+
+---
+
+# Visualization
+
+The repository includes several visualizations:
+
+### Kaplan–Meier Survival Curves
+
+```r
+plot(svf2t,
+     col = 3:4,
+     lwd = 3,
+     xlab = "Time to relapse [Weeks]",
+     ylab = expression(bolditalic(hat(S)(t))))
+legend("bottomleft", levels(remission$treat), col = 3:4, lwd = 3)
+```
+
+### Additional Plots
+
+The project also visualizes:
+
+- survival functions \(S(t)\)
+- cumulative distribution functions \(F(t)\)
+- cumulative hazard functions \(\Lambda(t)\)
+
+These plots help interpret how relapse risk evolves over time under different treatments.
+
+---
+
+# Key Insights
+
+Exploratory analysis shows:
+
+- the **6-MP treatment group has longer follow-up times**
+- the **control group survival curve drops to zero**, indicating relapse events for all patients
+- the treatment group maintains higher survival probabilities
+
+This suggests a **potential beneficial treatment effect**, which motivates further modeling (e.g., Cox regression).
+
+---
+
+# Technologies Used
+
+- **R**
+- `survival`
+- `Hmisc`
+
+Optional visualization improvements:
+
+- `survminer`
+
+---
+
+# Repository Structure
+
+```
+survival-analysis-kaplan-meier/
+│
+├── Nonparametric_estimation_survival_function.qmd
+├── Ahda_RLab1.RData
+├── plots/
+└── README.md
+```
+
+---
+
+# Skills Demonstrated
+
+This project demonstrates practical skills used in **health data science and clinical analytics**:
+
+- survival analysis
+- Kaplan–Meier estimation
+- handling censored medical data
+- clinical trial data exploration
+- statistical programming in R
+- reproducible analysis using Quarto
+
+---
+
+# Potential Extensions
+
+Future analyses could include:
+
+- Cox proportional hazards modeling
+- log-rank test for survival differences
+- bootstrapped survival estimates
+- integration with real-world clinical datasets
+
+---
+
+# Author
+
+Johanna Albers  
+Data Science / Health Data Analytics| `status` | Disease stage |
 
 The dataset contains **42 observations** and includes **right-censored follow-up times**, a common challenge in clinical research.
 
