@@ -307,25 +307,6 @@ This project demonstrates practical skills relevant for **health data science an
 
 ---
 
-# Repository Structure
-
-```
-survival-analysis-project/
-│
-├── data/
-│   └── remission_dataset.RData
-│
-├── scripts/
-│   └── survival_analysis.R
-│
-├── plots/
-│   └── survival_curves.png
-│
-└── README.md
-```
-
----
-
 # Potential Extensions
 
 Future improvements could include:
