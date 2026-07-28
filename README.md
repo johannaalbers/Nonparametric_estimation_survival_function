@@ -293,6 +293,11 @@ Comparing estimators helps evaluate differences in survival function estimation 
 - `survminer` (optional visualization improvements)
 
 ---
+## Reproducing this analysis
+
+Install the dependencies with `setup.R` (R)
+
+---
 
 # Key Skills Demonstrated
 
